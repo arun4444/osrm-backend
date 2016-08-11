@@ -347,7 +347,7 @@ Intersection IntersectionGenerator::adjustForJoiningRoads(const NodeID node_at_i
                                                           Intersection intersection) const
 {
     // nothing to do for dead ends
-    if (true || intersection.size() <= 1)
+    if ( intersection.size() <= 1)
         return intersection;
 
     for (auto &road : intersection)

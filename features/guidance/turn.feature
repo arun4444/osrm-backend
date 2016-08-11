@@ -999,4 +999,3 @@ Feature: Simple Turns
             | waypoints | turns                           | route          |
             | f,a       | depart,arrive                   | road,road      |
             | e,a       | depart,turn slight right,arrive | turn,road,road |
-
