@@ -325,7 +325,6 @@ Feature: Collapse
             | g,f       | second,first,first  | depart,turn right,arrive       |
             | g,c       | second,first,first  | depart,end of road left,arrive |
 
-
     Scenario: Do not collapse turning roads
         Given the node map
             |   |   | e |   |   |
@@ -683,3 +682,43 @@ Feature: Collapse
             | a,c       | main,main                 | depart,arrive                          |
             | a,e       | main,straight,straight    | depart,turn straight,arrive            |
             | a,f       | main,straight,right,right | depart,turn straight,turn right,arrive |
+
+    Scenario: Entering a segregated road
+        Given the node map
+            |   | a | f |   |   |
+            |   |   |   |   | g |
+            |   | b | e |   |   |
+            |   |   |   |   |   |
+            |   |   |   |   |   |
+            | c | d |   |   |   |
+
+        And the ways
+            | nodes | highway | name   | oneway |
+            | abc   | primary | first  | yes    |
+            | def   | primary | first  | yes    |
+            | be    | primary | first  | no     |
+            | ge    | primary | second | no     |
+
+        When I route I should get
+            | waypoints | route               | turns                          |
+            | d,c       | first,first,first   | depart,continue uturn,arrive   |
+
+    Scenario: Entering a segregated road slight turn
+        Given the node map
+            |   |   | a | f |   |
+            |   |   |   |   | g |
+            |   | b | e |   |   |
+            |   |   |   |   |   |
+            |   |   |   |   |   |
+            | c | d |   |   |   |
+
+        And the ways
+            | nodes | highway | name   | oneway |
+            | abc   | primary | first  | yes    |
+            | def   | primary | first  | yes    |
+            | be    | primary | first  | no     |
+            | ge    | primary | second | no     |
+
+        When I route I should get
+            | waypoints | route               | turns                          |
+            | d,c       | first,first,first   | depart,continue uturn,arrive   |

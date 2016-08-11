@@ -938,6 +938,7 @@ Feature: Simple Turns
             |   | f |   |
             |   | e |   |
             |   |   |   |
+            |   |   |   |
             | g |   | d |
             |   |   |   |
             |   |   |   |
@@ -976,26 +977,46 @@ Feature: Simple Turns
             | y,f       | depart,arrive | Hermannstr,Hermannstr |
             | f,y       | depart,arrive | Hermannstr,Hermannstr |
 
-    Scenario: Turning into splitting road
+    Scenario: Collapse Turn Instruction, Issue #2725 - non mergable at e
+    # https://www.mapillary.com/app/?lat=52.466483333333336&lng=13.431908333333332&z=17&focus=photo&pKey=LWXnKqoGqUNLnG0lofiO0Q
+    # http://www.openstreetmap.org/#map=19/52.46750/13.43171
         Given the node map
-            |   | a |   |   |
-            |   | b |   |   |
-            |   |   |   |   |
-            |   |   |   |   |
-            | c |   | d |   |
-            |   |   |   |   |
-            |   |   |   | e |
-            |   |   |   |   |
-            |   |   | f |   |
+            |   | f |   |
+            |   | e |   |
+            | g |   | d |
+            |   |   |   |
+            |   |   |   |
+            | h |   | c |
+            |   |   |   |
+            |   |   |   |
+            |   | b |   |
+            |   | a |   |
+            |   |   |   |
+            |   |   |   |
+            | r | x | s |
+            |   | y |   |
 
         And the ways
-            | nodes | name | highway | oneway |
-            | ab    | road | primary | no     |
-            | bc    | road | primary | yes    |
-            | fdb   | road | primary | yes    |
-            | de    | turn | primary | no     |
+            | nodes | name           | highway   | oneway |
+            | ab    | Hermannstr     | secondary |        |
+            | bc    | Hermannstr     | secondary | yes    |
+            | cd    | Hermannbruecke | secondary | yes    |
+            | de    | Hermannstr     | secondary | yes    |
+            | ef    | Hermannstr     | secondary |        |
+            | eg    | Hermannstr     | secondary | yes    |
+            | gh    | Hermannbruecke | secondary | yes    |
+            | hb    | Hermannstr     | secondary | yes    |
+            | xa    | Hermannstr     | secondary |        |
+            | yx    | Hermannstr     | secondary |        |
+            | rxs   | Silbersteinstr | tertiary  |        |
+
+        And the nodes
+            | node | highway         |
+            | x    | traffic_signals |
 
         When I route I should get
-            | waypoints | turns                           | route          |
-            | f,a       | depart,arrive                   | road,road      |
-            | e,a       | depart,turn slight right,arrive | turn,road,road |
+            | waypoints | turns         | route                 |
+            | a,f       | depart,arrive | Hermannstr,Hermannstr |
+            | f,a       | depart,arrive | Hermannstr,Hermannstr |
+            | y,f       | depart,arrive | Hermannstr,Hermannstr |
+            | f,y       | depart,arrive | Hermannstr,Hermannstr |
