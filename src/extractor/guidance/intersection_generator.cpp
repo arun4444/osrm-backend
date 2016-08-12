@@ -219,7 +219,8 @@ bool IntersectionGenerator::CanMerge(const NodeID node_at_intersection,
                               intersection,
                               coordinate_at_in_edge,
                               coordinate_at_intersection,
-                              node_at_intersection](const std::size_t index) {
+                              node_at_intersection](const std::size_t index,
+                                                    const std::size_t other_index) {
         const auto target_id = [&]() {
             EdgeID last_in_edge_id;
             GetActualNextIntersection(
@@ -234,22 +235,29 @@ bool IntersectionGenerator::CanMerge(const NodeID node_at_intersection,
         const double distance_to_target = util::coordinate_calculation::haversineDistance(
             coordinate_at_intersection, coordinate_at_target);
 
+        const auto other_angle = intersection[other_index].turn.angle;
         const bool becomes_narrower =
-            (angularDeviation(turn_angle, STRAIGHT_ANGLE) < NARROW_TURN_ANGLE &&
-             angularDeviation(turn_angle, STRAIGHT_ANGLE) <
-                 angularDeviation(intersection[index].turn.angle, STRAIGHT_ANGLE));
+            angularDeviation(turn_angle, other_angle) < NARROW_TURN_ANGLE &&
+            angularDeviation(turn_angle, other_angle) <
+                angularDeviation(intersection[index].turn.angle, other_angle);
 
         return becomes_narrower;
     };
 
     // Only merge valid y-arms
-    if( !isValidYArm(first_index) || !isValidYArm(second_index) )
+    if (!isValidYArm(first_index,second_index) || !isValidYArm(second_index,first_index))
+    {
+        if (angle_between < 60)
+        {
+            std::cout << "Cannot Merge here, due two y-arms." << std::endl;
+        }
         return false;
+    }
 
     if (angle_between < 60)
     {
         std::cout << "Merging success at (" << first_index << "." << second_index << "):\n";
-        for( auto road : intersection )
+        for (auto road : intersection)
             std::cout << "\t" << toString(road) << std::endl;
         return true;
     }
@@ -285,10 +293,10 @@ bool IntersectionGenerator::CanMerge(const NodeID node_at_intersection,
     // Allow larger angles if its three roads only of the same name
     const bool could_be_valid_y_intersection =
         angle_between < 100 && y_angle_difference < FUZZY_ANGLE_DIFFERENCE;
-    if( could_be_valid_y_intersection )
+    if (could_be_valid_y_intersection)
     {
         std::cout << "Merging success (y) at (" << first_index << "." << second_index << "):\n";
-        for( auto road : intersection )
+        for (auto road : intersection)
             std::cout << "\t" << toString(road) << std::endl;
     }
     return could_be_valid_y_intersection;

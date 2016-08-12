@@ -246,22 +246,28 @@ Feature: Simple Turns
 
     Scenario: Four Way Intersection Double Through Street Segregated
         Given the node map
-            |   | b |   | c |   |
-            | i |   |   |   | d |
-            |   |   | a |   |   |
-            | h |   |   |   | e |
-            |   | g |   | f |   |
+            |   |   |   |   | q |   | p |   |   |   |   |
+            |   |   |   |   |   |   |   |   |   |   |   |
+            |   |   |   |   |   |   |   |   |   |   |   |
+            |   |   |   |   |   |   |   |   |   |   |   |
+            |   |   |   |   |   |   |   |   |   |   |   |
+            |   |   |   |   | b |   | c |   |   |   |   |
+            | j |   |   | i |   |   |   | d |   |   | o |
+            |   |   |   |   |   | a |   |   |   |   |   |
+            | k |   |   | h |   |   |   | e |   |   | n |
+            |   |   |   |   | g |   | f |   |   |   |   |
+            |   |   |   |   |   |   |   |   |   |   |   |
+            |   |   |   |   |   |   |   |   |   |   |   |
+            |   |   |   |   |   |   |   |   |   |   |   |
+            |   |   |   |   |   |   |   |   |   |   |   |
+            |   |   |   |   | l |   | m |   |   |   |   |
 
         And the ways
             | nodes  | highway | oneway | name   |
-            | ha     | primary | yes    | first  |
-            | ai     | primary | yes    | first  |
-            | ae     | primary | yes    | first  |
-            | da     | primary | yes    | first  |
-            | ba     | primary | yes    | second |
-            | ac     | primary | yes    | second |
-            | fa     | primary | yes    | second |
-            | ag     | primary | yes    | second |
+            | khaij  | primary | yes    | first  |
+            | odaen  | primary | yes    | first  |
+            | qbacp  | primary | yes    | second |
+            | mfagl  | primary | yes    | second |
 
        When I route I should get
             | waypoints | route                | turns                        |
